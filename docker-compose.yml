@@ -1,0 +1,33 @@
+services:
+
+  dnsmasq:
+    build: ./dnsmasq
+    container_name: dnsmasq
+    volumes:
+      - ./dnsmasq/conf:/etc/dnsmasq.d:ro
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lan:
+        ipv4_address: 30.0.0.250
+    command: >
+      sh -c 'tail -f /dev/null'
+    
+  web:
+    image: nginx:alpine
+    container_name: nginx
+    ports: 
+      - "8080:80"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+    networks:
+      lan:
+        ipv4_address: 30.0.0.251
+
+networks:
+  lan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 30.0.0.0/24
+          gateway: 30.0.0.254
