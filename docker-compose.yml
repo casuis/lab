@@ -10,8 +10,6 @@ services:
     networks:
       lan:
         ipv4_address: 30.0.0.250
-    command: >
-      sh -c 'tail -f /dev/null'
     
   web:
     image: nginx:alpine
@@ -26,7 +24,9 @@ services:
 
 networks:
   lan:
-    driver: bridge
+    driver: macvlan
+    driver_opts:
+      parent: eno1
     ipam:
       config:
         - subnet: 30.0.0.0/24
